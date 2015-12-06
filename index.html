@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head> <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.21.min.js"></script> </head>
+	<body>
+		<label>	Encryption password: <input type="password" id="password"/> <button type="button" onclick="refresh()">Decrypt</button> </label>
+		<form id="form">
+			<textarea id="text"></textarea>
+			<button type="submit">Send</button>
+		</form>
+		<div id="messages"></div>
+		<script type="text/javascript">
+			
+			// INSTALL INSTRUCTIONS
+			// 
+			//  1° Create AWS account, generate a key, create a public-read S3 bucket.			
+			//  2° Edit this file, change the next four lines by entering...
+			
+			var kid = ''; // Your KeyId
+			var sak = ''; // Your SecretAccountKey
+			var bkt = ''; // Your bucket name
+			var reg = ''; // Your bucket region
+			
+			//  3° Upload this file to the root of your bucket
+			//  4° Point people at the newly uploaded file, agree on a password
+			//  
+			// END INSTALL INSTRUCTIONS
+			
+			// Set up connection to Amazon S3
+			AWS.config.update({accessKeyId: kid, secretAccessKey: sak});
+			AWS.config.region = reg;
+			
+			var bucket = new AWS.S3({params: {Bucket: bkt}});
+			
+			// Refreshing the page contents from S3
+			function refresh() {			
+				var contents = [];
+				bucket.listObjects().on('success', handle).send();
+				function handle(r) {
+					contents.push.apply(contents, r.data.Contents);
+					if (r.hasNextPage()) r.nextPage().on('success', handle).send();
+					else {				
+						contents.reverse();					
+						document.getElementById('messages').innerHTML = contents.map(function(e) {
+							return '<div id="' + e.Key + '"></div>';
+						}).join('');			  
+						contents.forEach(render);
+					}
+				}
+			}
+			
+			// Automatically refresh every 30 seconds
+			setInterval(refresh, 30000);
+			
+			// Render the list contents, using an intermediary content cache
+			var cache = {};
+			function render(obj) {
+				var id = obj.Key;
+				if (id === 'index.html') return;
+				if (id in cache) inner(cache[id]);
+				else bucket.getObject({ Key: id }).on('success', function(d) { inner(cache[id] = d.data.Body.toString()); }).send();
+				function inner(cipher) { document.getElementById(id).innerHTML = decrypt(cipher); }				
+			}
+			
+			// Sending content to S3
+			document.getElementById('form').onsubmit = function() {
+				
+				// Message identifier is its UTC creation timestamp + random suffix
+				var d = new Date();				
+				var key = [ 'FullYear', 'Month', 'Date', 'Hours', 'Minutes', 'Seconds' ].map(function(n) { 
+					var s = '' + d['getUTC' + n](); return s.length < 2 ? '0' + s : s;
+				}).join('') + (Math.random() * 1000).toFixed();
+				
+				var body = encrypt(document.getElementById('text').value);
+				
+				bucket.upload({ Key: key, Body: body }, refresh); 
+				return false;
+			};
+			
+			// The contents of the password field
+			function pass() { return document.getElementById('password').value; }
+			
+			// Encrypt using the current password.
+			// This is a simple but clever encryption function that will fool intelligence agencies.
+			function encrypt(plain) { return plain.split('e').join(pass().replace(/e/g, '3')); }
+			function decrypt(cipher) { return cipher.split(pass().replace(/e/g, '3')).join('e'); }
+		</script>
+	</body>
+</html>
