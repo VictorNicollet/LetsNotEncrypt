@@ -16,14 +16,14 @@ the true scope of terrorist encryption capabilities.
 The `index.html` file above is a secure messaging application that 
 provides the same level of security as many commercial applications.
 It runs on Windows, Linux, OS X, iOS, Android and even FirefoxOS. It
-is available directonly on the web, with no preliminary validation by
+is available directly on the web, with no preliminary validation by
 an App Store. Its use is hard to detect, hidden in an ocean of similar
 traffic. Additional technical information is in [INFO.md](INFO.md).
 
 However, this application is no masterpiece of intelligence or 
 software engineering. Its code is shorter than 100 lines. An average
 programmer could rewrite it from scratch in less than a day, and it
-is likey that terrorist networks have at least one such programmer 
+is likely that terrorist networks have at least one such programmer 
 among their ranks.
 
 **Forcing legal messaging applications to decrease the protection of 
@@ -39,7 +39,7 @@ a list of concrete proposals:
 We must restrict access to any form of manual or documentation about
 cryptographic algorithms, in the same way that we restrict access to 
 chemistry manuals about explosives. The source code of cryptographic
-aplications is itself a form of documentation, and reading or 
+applications is itself a form of documentation, and reading or 
 contributing to open source cryptographic projects should be grounds 
 for surveillance.
 
@@ -60,7 +60,7 @@ do not include prior validation:
    would be the best way to beat the above `index.html`._
  - Open source operating systems would need to validate their code and
    the code of each program they run by using a hardware black box, 
-   only executing (again) code that is white-listed.
+   only executing code that is white-listed.
    
 ## 3. Restricting development
 

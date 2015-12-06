@@ -17,7 +17,7 @@ terroristes au chiffrage des données.
 Le fichier `index.html` ci-dessus est une application de messagerie
 sécurisée, offrant le même niveau de garanties que bon nombre 
 d'applications commerciales. Cette application fonctionne sur 
-Windows, Linux, OS X, iOS, Android et même FirefoxOS. Il est accessible
+Windows, Linux, OS X, iOS, Android et même FirefoxOS. Elle est accessible
 directement par le web, sans validation préalable par un App Store. 
 Son utilisation n'est pas facilement détectable, puisque noyée dans un 
 océan de trafic très similaire. Davantage d'informations techniques 
